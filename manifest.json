@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Amazon Search",
+  "version": "1.0",
+  "description": "tool to help search data",
+  "icons": { "16": "icon16.png",
+           "48": "icon48.png",
+          "128": "icon128.png"
+        },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.amazonlogistics.com/comp/packageSearch*"
+      ],
+      "js": ["jquery-3.2.1.min.js", "FileSaver.js", "jszip.js", "myexcel.js", "searchAll.js" ]
+    }
+  ],
+  "background":
+  {
+    "scripts": ["jquery-3.2.1.min.js", "jszip.js", "FileSaver.js", "myexcel.js"]
+  }
+}
