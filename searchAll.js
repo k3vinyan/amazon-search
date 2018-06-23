@@ -150,6 +150,7 @@ $(function(){
 
   //insert data into excel file, must create template first
   function insertDataToExcel(name, excel, arrays){
+    console.log("monkey")
     let e = excel;
     for(let i = 1; i < arrays.length + 1; i++){
       for(let j = 1; j < arrays[i - 1].length; j++){
@@ -192,25 +193,25 @@ $(function(){
             //setTimeout for audio to allow time to load
             if(TBA.length === 15){
               if(status === 'Rejected' || status === 'Departed For FC' || status === 'Ready For FC' || status === 'Ready For FC Return'){
-                console.log("FC")
+                //console.log("FC")
                 fcArray.push(TBA);
                 allTbasArray.push(TBA);
                 choco.play();
               } else if(status === 'At Wrong Station' || status === 'Ready for Transfer' || station != 'DSF3'){
-                console.log("Milk Run")
+                //console.log("Milk Run")
                 wtArray.push(TBA);
                 allTbasArray.push(TBA);
                 buzzer.play();
               }else if(stripRoute != skipRoute || route === '\xa0'){
-                console.log("No Route/Wrong Route")
+                //console.log("No Route/Wrong Route")
                 noRouteArray.push(TBA);
                 allTbasArray.push(TBA);
                 accept.play();
               } else if(stripRoute === skipRoute){
-                console.log("Correct Route");
+                //console.log("Correct Route");
                 select.play();
               } else{
-                console.log("others")
+                //console.log("others")
                 othersArray.push(TBA);
                 allTbasArray.push(TBA);
                 buzzer.play();
@@ -218,7 +219,7 @@ $(function(){
             };
 
           } else {
-            console.log("No Comp");
+            //console.log("No Comp");
             noCompArray.push(TBA);
             allTbasArray.push(TBA);
             buzzer.play();
@@ -241,92 +242,92 @@ $(function(){
   };
 
     //method to checked all objeects with corresponding status
-    function findAll(status){
-      var status;
-      var even = $('.even');
-      var odd = $('.odd');
+  function findAll(status){
+    var status;
+    var even = $('.even');
+    var odd = $('.odd');
 
-      for(var i = 0; i < even.length; i++){
-        if( (even[i].children[18].innerText) == status ){
-          $(even[i].children[0].children[0]).attr('checked', true);
-        }
+    for(var i = 0; i < even.length; i++){
+      if( (even[i].children[18].innerText) == status ){
+        $(even[i].children[0].children[0]).attr('checked', true);
       }
-      for(var i = 0; i < odd.length; i++){
-        if( (odd[i].children[18].innerText) == status ){
-          $(odd[i].children[0].children[0]).attr('checked', true);
-        }
+    }
+    for(var i = 0; i < odd.length; i++){
+      if( (odd[i].children[18].innerText) == status ){
+        $(odd[i].children[0].children[0]).attr('checked', true);
       }
-    };
+    }
+  };
 
     //method to checked all sameDay
-    function findSameDay(){
-      var even = $('.even');
-      var odd = $('.odd');
+  function findSameDay(){
+    var even = $('.even');
+    var odd = $('.odd');
 
-      for(var i = 0; i < even.length; i++){
-        if(even[i].children[5].innerText === "Same"){
-            $(even[i].children[0].children[0]).attr('checked', true);
-        }
+    for(var i = 0; i < even.length; i++){
+      if(even[i].children[5].innerText === "Same"){
+        $(even[i].children[0].children[0]).attr('checked', true);
       }
-      for(var i = 0; i < odd.length; i++){
-        if( (odd[i].children[5].innerText) == "Same" ){
-          $(odd[i].children[0].children[0]).attr('checked', true);
-        }
+    }
+    for(var i = 0; i < odd.length; i++){
+      if( (odd[i].children[5].innerText) == "Same" ){
+        $(odd[i].children[0].children[0]).attr('checked', true);
+      }
+    }
+  }
+
+  function findNonSameDay(){
+    var even = $('.even');
+    var odd = $('.odd');
+
+    for(var i = 0; i < even.length; i++){
+      if(even[i].children[5].innerText != "Same"){
+          $(even[i].children[0].children[0]).attr('checked', true);
+      }
+    }
+    for(var i = 0; i < odd.length; i++){
+      if( (odd[i].children[5].innerText) != "Same" ){
+        $(odd[i].children[0].children[0]).attr('checked', true);
+      }
+    }
+  }
+
+  //collects checked TBA and returns it to a prompt and launch new window
+  function openNewWindow(){
+    array = [];
+    var even = $('.even');
+    var odd = $('.odd');
+    var input;
+    url = 'https://www.amazonlogistics.com/comp/packageSearch';
+    string = '';
+
+
+    for(var i =0; i < even.length; i++){
+      if($(even[i].children[0].children[0]).is(':checked')){
+        array.push(even[i].children[2].children[0].innerText);
       }
     }
 
-    function findNonSameDay(){
-      var even = $('.even');
-      var odd = $('.odd');
-
-      for(var i = 0; i < even.length; i++){
-        if(even[i].children[5].innerText != "Same"){
-            $(even[i].children[0].children[0]).attr('checked', true);
-        }
-      }
-      for(var i = 0; i < odd.length; i++){
-        if( (odd[i].children[5].innerText) != "Same" ){
-          $(odd[i].children[0].children[0]).attr('checked', true);
-        }
+    for(var i =0; i < odd.length; i++){
+      if($(odd[i].children[0].children[0]).is(':checked')){
+        array.push(odd[i].children[2].children[0].innerText);
       }
     }
-
-    //collects checked TBA and returns it to a prompt and launch new window
-    function openNewWindow(){
-      array = [];
-      var even = $('.even');
-      var odd = $('.odd');
-      var input;
-      url = 'https://www.amazonlogistics.com/comp/packageSearch';
-      string = '';
-
-
-      for(var i =0; i < even.length; i++){
-        if($(even[i].children[0].children[0]).is(':checked')){
-          array.push(even[i].children[2].children[0].innerText);
-        }
-      }
-
-      for(var i =0; i < odd.length; i++){
-        if($(odd[i].children[0].children[0]).is(':checked')){
-          array.push(odd[i].children[2].children[0].innerText);
-        }
-      }
-      string = array.toString().replace(/,/g, "\n ");
-      input = prompt("Ctrl + C to copy TBA(s)", string)
-      if(input === null){
-        return;
-      }else {
-        window.open(url, "Hello", "width=1200");
-        return false;
-      }
+    string = array.toString().replace(/,/g, "\n ");
+    input = prompt("Ctrl + C to copy TBA(s)", string)
+    if(input === null){
+      return;
+    }else {
+      window.open(url, "Hello", "width=1200");
+      return false;
     }
+  }
 
-   $(':checkbox').change(function() {
-      $("#clearButton").click(function(){
-        $('input:checkbox').removeAttr('checked');
-      });
+  $(':checkbox').change(function() {
+    $("#clearButton").click(function(){
+      $('input:checkbox').removeAttr('checked');
     });
+  });
 
   //create button with additonal options
   function optionButton(id, value, color, bgColor, padding){
@@ -345,78 +346,24 @@ $(function(){
   };
 
   function bubbleSort(arr){
-   var len = arr.length;
-   var num1 = 0;
-   var num2 = 0;
-   for (var i = len-1; i>=0; i--){
-     for(var j = 1; j<=i; j++){
-       num1 = parseInt((arr[j-1]).route.replace(/\D/g, ""));
-       num2 = parseInt((arr[j]).route.replace(/\D/g, ""));
-       if( num1 > num2 ){
-           var temp = arr[j-1];
-           arr[j-1] = arr[j];
-           arr[j] = temp;
+    var len = arr.length;
+    var num1 = 0;
+    var num2 = 0;
+
+    for (var i = len-1; i>=0; i--){
+      for(var j = 1; j<=i; j++){
+        num1 = parseInt((arr[j-1]).route.replace(/\D/g, ""));
+        num2 = parseInt((arr[j]).route.replace(/\D/g, ""));
+
+        if( num1 > num2 ){
+          var temp = arr[j-1];
+          arr[j-1] = arr[j];
+          arr[j] = temp;
         }
-     }
-   }
-   return arr;
-}
-
-  function focus(){
-      counterForFocus ++;
-      truthValue = toggleOnOff(counterForFocus, switchForFocus);
-      if(truthValue){
-        var route = prompt("Please enter the route:", "Enter route here" );
-        returnRoute(route);
-        $('#focusButton').attr('value', 'FOCUS ONE ON');
-        $('#focusButton').css('background-color', '#4C177D');
-        $("#shipmentSearchId").keydown(keydownHandler);
-        $("#shipmentSearchIds").keydown(keydownHandler);
-      } else {
-        $('#focusButton').attr('value', 'FOCUS ONE OFF');
-        $('#focusButton').css('background-color', '#BDBDBD');
-        $("#shipmentSearchId").unbind('keydown', keydownHandler);
-        $("#shipmentSearchIds").keydown(keydownHandler);
       }
-  }
-
-  var focusRoute = ""
-  function returnRoute(route){
-    focusRoute = route;
-  }
-
-  function toggleOnOff(counter, switcher){
-    if(counter%2 == 0){
-      switcher = true;
     }
-    else if(counter%2 !== 0){
-      switcher = false;
-    }
-    return switcher;
+    return arr;
   }
-
-  function keydownHandler(e){
-
-    if(e.keyCode == 13){
-      $("#shipmentSearchId").select();
-      $("#searchSubmit").click(function(){
-      });
-      setTimeout(function(){
-        $("#shipmentSearchId").select();
-        //recordTBA();
-      }, 1000);
-    }
-
-  };
-
- function keydownhandler2(e){
-   if(e.keyCode == 13){
-     $("#searchSubmit").click();
-     setTimeout(function(){
-       $("#shipmentSearchIds").focus();
-     }, 1000);
-   }
- };
 
   function scanAll(){
     counterForScanAll++;
@@ -432,36 +379,6 @@ $(function(){
       $("#shipmentSearchIds").keydown(keydownhandler2);
     }
   }
-
-  function arrayNotEmpty(){
-    if(recordArray.length > 0){
-      $('#getRecordButton').css('background-color', '#CF3523');
-    } else {
-      $('#getRecordButton').css('background-color', '#BDBDBD');
-    }
-  }
-
-  function recordTBA(){
-    checkStatus(focusRoute);
-    let input = $("#shipmentSearchId").keypress();
-
-    if(input[0].value.length == 15){
-      recordArray.push(input[0].value);
-    }
-      arrayNotEmpty();
-  }
-
-  function getRecord(){
-    url = 'https://www.amazonlogistics.com/comp/packageSearch';
-    string = recordArray.toString().replace(/,/g, "\n ");
-    input = prompt("Ctrl + C to copy TBA(s) | Press CLEAR to reset TBAs", string)
-    if(input === null){
-      return;
-    }else {
-      window.open(url, "width=1200");
-      return false;
-    }
-  };
 
   function checkStatus(routeToSearch){
     let routeSearch = routeToSearch;
@@ -638,11 +555,11 @@ $(function(){
     window.open(link);
   }
 
-    $('a.button').css("appearance", "button");
-    $('a.button').css("text-decoration", "none");
-    $('a.button').css("background-color", "#577290")
-    $('a.button').css("color", "#fff");
-    $('a.button').css("padding", "3px");
+  $('a.button').css("appearance", "button");
+  $('a.button').css("text-decoration", "none");
+  $('a.button').css("background-color", "#577290")
+  $('a.button').css("color", "#fff");
+  $('a.button').css("padding", "3px");
 
 
 });
