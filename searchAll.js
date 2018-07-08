@@ -12,6 +12,7 @@ $(function(){
   flexAudio.src     = "https://drive.google.com/uc?export=download&id=0B93xTaskz1_WZkpyekVGRGxuZm8";
 
   let today = new Date();
+
   let todayFormat = (today.getMonth()+1).toString() + "." + (today.getDay().toString()) + "." + (today.getFullYear().toString());
   let wtArray = [];
   let noCompArray = [];
@@ -55,6 +56,9 @@ $(function(){
     );
     $('#ShipmentSearchTable').prepend(
       optionButton('mapButton', 'MAP', '#FFFFFF', '#3CB371', '5px')
+    );
+    $('#ShipmentSearchTable').prepend(
+      optionButton('recycleButton', 'RECYCLE', '#FFFFFF', '#ffc966', '5px')
     );
     $('#ShipmentSearchTable').prepend(
       optionButton('clearButton', ' CLEAR ', '#FFFFFF', '#cc1818', '5px')
@@ -115,6 +119,9 @@ $(function(){
     $('#findStatus').click(function(){
       getStatus();
     });
+    $('#recycleButton').click(function(){
+      getRecycle();
+    });
     $('#mapButton').click(function(){
       getMap()
     });
@@ -140,8 +147,8 @@ $(function(){
   //create excel template
   function createExcel(headers){
     const excel = $JExcel.new();
-    const formatHeader = excel.addStyle({border: "none,none,none,thin #551A8B",font: "Calibri 12 #FFFFFF B", fill: "#000000"});
-    for(let i=0; i < headers.length; i++){
+    const formatHeader = excel.addStyle({border: "none,none,none,thin #551A8B",font: "Calibri 12 #FFFFFF B", fill: "#000000", align: "C C"});
+    for(let i = 0; i < headers.length; i++){
       excel.set(0, i, 0, headers[i], formatHeader);
       excel.set(0, i, undefined, "auto");
       }
@@ -150,11 +157,9 @@ $(function(){
 
   //insert data into excel file, must create template first
   function insertDataToExcel(name, excel, arrays){
-    console.log("monkey")
     let e = excel;
     for(let i = 1; i < arrays.length + 1; i++){
       for(let j = 1; j < arrays[i - 1].length; j++){
-        console.log(j)
         e.set(0, i-1, j, arrays[i - 1][j-1]);
       }
     }
@@ -227,6 +232,105 @@ $(function(){
         }, 2000);
       };
     })
+  };
+
+  //get routes and sort them 1-10
+  //only
+  function getRecycle(){
+    let routesByTenArray = [
+      { max: 10, min: 1, name: '01 - 10', count: 0, array: [] },
+      { max: 20, min: 11, name: '11 - 20', count: 0, array: [] },
+      { max: 30, min: 21, name: '21 - 30', count: 0, array: [] },
+      { max: 40, min: 31, name: '31 - 40', count: 0, array: [] },
+      { max: 50, min: 41, name: '41 - 50', count: 0, array: [] },
+      { max: 60, min: 51, name: '51 - 60', count: 0, array: [] },
+      { max: 70, min: 61, name: '61 - 70', count: 0, array: [] },
+      { max: 80, min: 71, name: '71 - 80', count: 0, array: [] },
+      { max: 90, min: 81, name: '81 - 90', count: 0, array: [] },
+      { max: 100, min: 91, name: '91 - 100', count: 0, array: [] },
+      { max: 110, min: 101, name: '101 - 110', count: 0, array: [] },
+      { max: 120, min: 111, name: '111 - 120', count: 0, array: [] },
+      { max: 130, min: 121, name: '121 - 130', count: 0, array: [] },
+      { max: 140, min: 131, name: '131 - 140', count: 0, array: [] },
+      { max: 150, min: 141, name: '141 - 150', count: 0, array: [] },
+      { max: 160, min: 151, name: '151 - 160', count: 0, array: [] },
+      { max: 170, min: 161, name: '161 - 170', count: 0, array: [] },
+      { max: 180, min: 171, name: '171 - 180', count: 0, array: [] },
+      { max: 190, min: 181, name: '181 - 190', count: 0, array: [] },
+      { max: 200, min: 191, name: '191 - 200', count: 0, array: [] },
+      { max: 210, min: 201, name: '201 - 210', count: 0, array: [] },
+      { max: 220, min: 211, name: '211 - 220', count: 0, array: [] },
+      { max: 230, min: 221, name: '221 - 230', count: 0, array: [] },
+      { max: 240, min: 231, name: '231 - 240', count: 0, array: [] },
+      { max: 250, min: 241, name: '241 - 250', count: 0, array: [] }
+    ];
+
+    //let userCluster = prompt("Which cluster", 'v').toLowerCase();
+    const excel = createExcel(["Routes", "Count", " ", "All Tbas"])
+
+    let tbaArray = [];
+    let tba;
+    let route;
+    let routeCluster;
+    let routeNumber;
+    const even = $('.even');
+    const odd = $('.odd');
+
+    for(let i = 0; i < even.length; i++){
+      tba = even[i].children[2].innerText;
+      routeCluster = even[i].children[16].innerText.replace(/[0-9]/g, '').toLowerCase();
+      route = even[i].children[16].innerText;
+      tbaArray.push(tba);
+
+      routeNumber = route.replace(/\D+/g, '');
+      binarySearchAddCount(routesByTenArray, routeNumber);
+    };
+    for(let i = 0; i < odd.length; i++){
+      tba = odd[i].children[2].innerText;
+      routeCluster = odd[i].children[16].innerText.replace(/[0-9]/g, '').toLowerCase();
+      route = odd[i].children[16].innerText;
+      tbaArray.push(tba);
+
+      routeNumber = route.replace(/\D+/g, '');
+      binarySearchAddCount(routesByTenArray, routeNumber);
+    };
+
+    for(let i = 1; i < routesByTenArray.length + 1; i++){
+      excel.set(0, 0, i, routesByTenArray[i - 1].name, excel.addStyle( {align:"C C"}))
+      excel.set(0, 1, i, routesByTenArray[i - 1].count, excel.addStyle( {align:"C C"}))
+    };
+
+
+    for(let i = 1; i < tbaArray.length + 1; i++){
+      excel.set(0, 3, i, tbaArray[i - 1], excel.addStyle( {align: "C C"} ))
+    }
+    excel.generate("Recycle Misses " + today + ".xlsx");
+
+  };
+
+  function binarySearchAddCount(array, value) {
+
+    let start = 0;
+    let end = array.length - 1;
+    let middle = Math.floor((start + end)/2);
+    let max = array[middle].max;
+    let min = array[middle].min;
+
+    while(max < value || min > value && start < end) {
+
+      if (min > value) {
+        end = middle - 1;
+      } else if(max < value) {
+        start = middle + 1;
+      } else {
+        console.log("This is from the else statment " + value)
+      }
+      middle = Math.floor((start + end) / 2)
+      min = array[middle].min;
+      max = array[middle].max;
+    }
+    array[middle].count++;
+    array[middle].array.push(value);
   };
 
   //create button function
