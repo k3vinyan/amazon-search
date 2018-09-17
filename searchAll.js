@@ -64,7 +64,7 @@ $(function(){
       optionButton('clearButton', ' CLEAR ', '#FFFFFF', '#cc1818', '5px')
     );
     $('#ShipmentSearchTable').prepend(
-      optionButton('newWindowButton', 'GET TBA(S)', '#FFFFFF', '#698EDA', '5px')
+      optionButton('getTbasButton', 'GET TBAS', '#FFFFFF', '#698EDA', '5px')
     );
 
     //find functions
@@ -90,8 +90,8 @@ $(function(){
     $("#readyForDepartureButton").click(function(){
       findAll("Ready for Departure");
     });
-    $("#newWindowButton").click(function(){
-      openNewWindow();
+    $("#getTbasButton").click(function(){
+      getTbas();
     });
     $("#sameDayButton").click(function(){
       findSameDay();
@@ -396,13 +396,10 @@ $(function(){
     }
   }
 
-  //collects checked TBA and returns it to a prompt and launch new window
-  function openNewWindow(){
+  function getTbas(){
     array = [];
     var even = $('.even');
     var odd = $('.odd');
-    var input;
-    url = 'https://www.amazonlogistics.com/comp/packageSearch';
     string = '';
 
 
@@ -418,13 +415,17 @@ $(function(){
       }
     }
     string = array.toString().replace(/,/g, "\n ");
-    input = prompt("Ctrl + C to copy TBA(s)", string)
-    if(input === null){
-      return;
-    }else {
-      window.open(url, "Hello", "width=1200");
-      return false;
-    }
+
+    let copyText = document.createElement('textarea');
+    copyText.setAttribute("id", "copyText")
+    copyText.value = string;
+    copyText.style.position = 'absolute';
+    copyText.style.left = '-9999px';
+    document.body.appendChild(copyText);
+    $('#copyText').select();
+    document.execCommand("copy");
+    document.body.removeChild(copyText);
+
   }
 
   $(':checkbox').change(function() {
