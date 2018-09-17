@@ -524,8 +524,8 @@ $(function(){
     let odd = $('.odd');
     let even = $('.even');
     let route = "";
-    let searchRoute = prompt("Enter Route to exclude:", "Enter Route here");
-    let reg = new RegExp("[" + searchRoute + "]\\d+");
+    let searchRoute = prompt("Enter Route to include:", "Enter Route here");
+    let reg = new RegExp(searchRoute + "\\d+");
 
     for(let i = 0; i < odd.length; i++){
       route = odd[i].children[16].innerText;
@@ -591,7 +591,7 @@ $(function(){
     let odd = $('.odd');
     let even = $('.even');
     let route = "";
-    let searchStatus = prompt("Enter Status to Search:", "Enter Status here");
+    let searchStatus = prompt("Enter Status to Search:", "Enter Status here").toLowerCase();
     let reg = new RegExp(searchStatus);
 
     for(let i = 0; i < odd.length; i++){
